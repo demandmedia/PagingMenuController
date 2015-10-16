@@ -11,18 +11,51 @@ import UIKit
 public class MenuItemView: UIView {
     
     private var options: PagingMenuOptions!
-    private var title: String!
+	
+	public var titleAttributed: NSAttributedString! {
+		didSet {
+			if titleLabel != nil {
+				titleLabel.attributedText = titleAttributed
+				layoutLabel()
+			}
+		}
+	}
+	public var titleSelectedAttributed: NSAttributedString! {
+		didSet {
+			if titleLabel != nil && selected {
+				titleLabel.attributedText = titleSelectedAttributed
+				layoutLabel()
+			}
+		}
+	}
+	
+	public var index:Int = 0
+	
+	private var title:String!
     private var titleLabel: UILabel!
     private var titleLabelFont: UIFont!
     private var widthLabelConstraint: NSLayoutConstraint!
-    
+	private var selected:Bool = false
+	
     // MARK: - Lifecycle
-    
-    internal init(title: String, options: PagingMenuOptions) {
+	
+	internal init(title: String, options: PagingMenuOptions) {
+		super.init(frame: CGRectZero)
+		
+		self.options = options
+		self.title = title
+		
+		setupView()
+		constructLabel()
+		layoutLabel()
+	}
+
+	internal init(title: NSAttributedString, selectedTitle: NSAttributedString, options: PagingMenuOptions) {
         super.init(frame: CGRectZero)
         
         self.options = options
-        self.title = title
+        self.titleAttributed = title
+		self.titleSelectedAttributed = selectedTitle
         
         setupView()
         constructLabel()
@@ -50,14 +83,22 @@ public class MenuItemView: UIView {
     // MARK: - Label changer
     
     internal func focusLabel(selected: Bool) {
+		
+		self.selected = selected
+		
         if case .RoundRect(_, _, _, _) = options.menuItemMode {
             backgroundColor = UIColor.clearColor()
         } else {
             backgroundColor = selected ? options.selectedBackgroundColor : options.backgroundColor
         }
-        titleLabel.textColor = selected ? options.selectedTextColor : options.textColor
-        titleLabelFont = selected ? options.selectedFont : options.font
-
+		
+		if titleAttributed != nil {
+			titleLabel.attributedText = selected ? titleSelectedAttributed : titleAttributed
+		} else {
+			titleLabel.textColor = selected ? options.selectedTextColor : options.textColor
+			titleLabelFont = selected ? options.selectedFont : options.font
+		}
+		
         // adjust label width if needed
         let labelSize = calculateLableSize()
         widthLabelConstraint.constant = labelSize.width
@@ -76,11 +117,17 @@ public class MenuItemView: UIView {
     
     private func constructLabel() {
         titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.textColor = options.textColor
-        titleLabelFont = options.font
-        titleLabel.font = titleLabelFont
-        titleLabel.numberOfLines = 1
+		if titleAttributed != nil {
+			titleLabel.attributedText = titleAttributed
+			titleLabel.numberOfLines = 0
+		} else {
+			titleLabel.text = title
+			titleLabel.textColor = options.textColor
+			titleLabelFont = options.font
+			titleLabel.font = titleLabelFont
+			titleLabel.numberOfLines = 1
+		}
+		
         titleLabel.textAlignment = NSTextAlignment.Center
         titleLabel.userInteractionEnabled = true
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -104,8 +151,12 @@ public class MenuItemView: UIView {
     // MARK: - Size calculator
     
     private func calculateLableSize(size: CGSize = UIScreen.mainScreen().bounds.size) -> CGSize {
-        let labelSize = NSString(string: title).boundingRectWithSize(CGSizeMake(CGFloat.max, CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: titleLabelFont], context: nil).size
-
+		var labelSize:CGSize!
+		if titleAttributed != nil {
+			labelSize = titleAttributed.boundingRectWithSize(CGSizeMake(CGFloat.max, CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil).size
+		} else {
+			labelSize = NSString(string: title).boundingRectWithSize(CGSizeMake(CGFloat.max, CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: titleLabelFont], context: nil).size
+		}
         let itemWidth: CGFloat
         switch options.menuDisplayMode {
         case .Standard(let widthMode, _, _):
