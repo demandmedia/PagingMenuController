@@ -34,7 +34,23 @@ public class MenuView: UIScrollView {
         layoutMenuItemViews()
         constructUnderlineViewIfNeeded()
     }
-    
+	
+	public init(menuItemTitles: [NSAttributedString], menuItemTitlesSelected: [NSAttributedString], options: PagingMenuOptions) {
+		
+		super.init(frame: CGRectZero)
+		
+		self.options = options
+		options.menuItemCount = menuItemTitles.count
+		
+		setupScrollView()
+		constructContentView()
+		layoutContentView()
+		constructRoundRectViewIfNeeded()
+		constructAttributedMenuItemViews(titles: menuItemTitles, selectedTitles: menuItemTitlesSelected)
+		layoutMenuItemViews()
+		constructUnderlineViewIfNeeded()
+	}
+	
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -108,6 +124,7 @@ public class MenuView: UIScrollView {
     private func constructMenuItemViews(titles titles: [String]) {
         for i in 0..<options.menuItemCount {
             let menuItemView = MenuItemView(title: titles[i], options: options)
+			menuItemView.index = i
             menuItemView.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(menuItemView)
             
@@ -116,7 +133,20 @@ public class MenuView: UIScrollView {
         
         sortMenuItemViews()
     }
-    
+	
+	private func constructAttributedMenuItemViews(titles titles: [NSAttributedString], selectedTitles: [NSAttributedString]) {
+		for i in 0..<options.menuItemCount {
+			let menuItemView = MenuItemView(title: titles[i], selectedTitle: selectedTitles[i] ,options: options)
+			menuItemView.index = i
+			menuItemView.translatesAutoresizingMaskIntoConstraints = false
+			contentView.addSubview(menuItemView)
+			
+			menuItemViews.append(menuItemView)
+		}
+		
+		sortMenuItemViews()
+	}
+	
     private func sortMenuItemViews() {
         if sortedMenuItemViews.count > 0 {
             sortedMenuItemViews.removeAll()
