@@ -30,8 +30,8 @@ public class PagingMenuController: UIViewController, UIScrollViewDelegate {
             options.menuItemCount = newValue.count
         }
     }
-    private var visiblePagingViewControllers = [UIViewController]()
-    private var currentPage: Int = 0
+    public var visiblePagingViewControllers = [UIViewController]()
+    public var currentPage: Int = 0
     public var currentViewController: UIViewController!
     private var menuItemTitles: [String] {
         get {
