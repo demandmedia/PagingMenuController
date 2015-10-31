@@ -9,6 +9,8 @@
 import UIKit
 
 @objc public protocol PagingMenuControllerDelegate: class {
+	optional func didBeginScrollingHorizontally()
+	optional func didEndScrollingHorizontally()
 	optional func willMoveToMenuPage(viewController:UIViewController, page: Int)
     optional func didMoveToMenuPage(viewController:UIViewController, page: Int)
 }
@@ -55,6 +57,15 @@ public class PagingMenuController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+	private var scrollBegan = false {
+		didSet {
+			if scrollBegan {
+				self.delegate?.didBeginScrollingHorizontally?()
+			} else {
+				self.delegate?.didEndScrollingHorizontally?()
+			}
+		}
+	}
     private var currentPosition: PagingViewPosition = .Left
     private let visiblePagingViewNumber: Int = 3
     private var previousIndex: Int {
@@ -171,6 +182,10 @@ public class PagingMenuController: UIViewController, UIScrollViewDelegate {
         if !scrollView.isEqual(contentScrollView) || !scrollView.dragging {
             return
         }
+		
+		if !scrollBegan {
+			scrollBegan = true
+		}
         
         // calculate current direction
         let position = currentPagingViewPosition()
@@ -207,7 +222,10 @@ public class PagingMenuController: UIViewController, UIScrollViewDelegate {
         case .Right: currentPage = nextIndex
         default: return
         }
-
+		
+		if scrollBegan {
+			scrollBegan = false
+		}
 		
         currentViewController = pagingViewControllers[currentPage]
 		delegate?.willMoveToMenuPage?(currentViewController, page: currentPage)
