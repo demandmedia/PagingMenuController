@@ -68,7 +68,7 @@ public class MenuView: UIScrollView {
         let duration = animated ? options.animationDuration : 0
         currentPage = page
         
-        UIView.animateWithDuration(duration, animations: { [unowned self] () -> Void in
+        UIView.animateWithDuration(duration, delay: 0, usingSpringWithDamping: options.springWithDamping, initialSpringVelocity: options.initialSpringVelocity , options: UIViewAnimationOptions.CurveEaseOut,  animations: { [unowned self] () -> Void in
             self.focusMenuItem()
             self.positionMenuItemViews()
         }) { [unowned self] (_) in

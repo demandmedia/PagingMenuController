@@ -24,6 +24,8 @@ public class PagingMenuOptions {
     public var menuHeight: CGFloat = 50
     public var menuItemMargin: CGFloat = 20
     public var animationDuration: NSTimeInterval = 0.3
+	public var initialSpringVelocity: CGFloat = 0
+	public var springWithDamping:CGFloat = 0
     public var menuDisplayMode = MenuDisplayMode.Standard(widthMode: PagingMenuOptions.MenuItemWidthMode.Flexible, centerItem: false, scrollingMode: PagingMenuOptions.MenuScrollingMode.PagingEnabled)
     public var menuItemMode = MenuItemMode.Underline(height: 3, color: UIColor.blueColor(), horizontalPadding: 0, verticalPadding: 0)
     public var menuItemCount = 0
