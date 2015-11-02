@@ -108,7 +108,7 @@ public class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		super.viewDidAppear(animated)
 		
 		
-		moveToMenuPage(currentPage, animated: false)
+//		moveToMenuPage(currentPage, animated: false)
 	}
 	
     override public func viewDidLayoutSubviews() {
