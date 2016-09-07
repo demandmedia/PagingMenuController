@@ -75,7 +75,7 @@ open class MenuItemView: UIView {
 	internal func updateLabelConstraints(size: CGSize) {
 		// set width manually to support ratotaion
 		if case .segmentedControl = options.menuDisplayMode {
-			let labelSize = calculateLableSize(size)
+			let labelSize = calculateLabelSize(size)
 			widthLabelConstraint.constant = labelSize.width
 		}
 	}
@@ -100,7 +100,7 @@ open class MenuItemView: UIView {
 		}
 
 		// adjust label width if needed
-		let labelSize = calculateLableSize()
+		let labelSize = calculateLabelSize()
 		widthLabelConstraint.constant = labelSize.width
 	}
 
@@ -137,7 +137,7 @@ open class MenuItemView: UIView {
 	private func layoutLabel() {
 		let viewsDictionary = ["label": titleLabel]
 
-		let labelSize = calculateLableSize()
+		let labelSize = calculateLabelSize()
 
 		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
 		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
@@ -150,7 +150,7 @@ open class MenuItemView: UIView {
 
 	// MARK: - Size calculator
 
-	private func calculateLableSize(_ size: CGSize = UIScreen.main.bounds.size) -> CGSize {
+	private func calculateLabelSize(_ size: CGSize = UIScreen.main.bounds.size) -> CGSize {
 		var labelSize:CGSize!
 		if titleAttributed != nil {
 			labelSize = titleAttributed.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil).size

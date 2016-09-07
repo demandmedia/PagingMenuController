@@ -10,7 +10,7 @@ import UIKit
 
 open class PagingMenuOptions {
 	open var defaultPage = 0
-	open var scrollEnabled = true // in case of using swipable cells, set false
+	open var isScrollEnabled = true // in case of using swipable cells, set false
 	open var backgroundColor = UIColor.white
 	open var selectedBackgroundColor = UIColor.white
 	open var textColor = UIColor.lightGray

@@ -58,12 +58,12 @@ open class MenuView: UIScrollView {
 	override open func layoutSubviews() {
 		super.layoutSubviews()
 
-		adjustmentContentInsetIfNeeded()
+		adjustContentInsetIfNeeded()
 	}
 
 	// MARK: - Public method
 
-	open func moveToMenu(page: Int, animated: Bool) {
+	open func move(toPage page: Int, animated: Bool) {
 
 		let duration = animated ? options.animationDuration : 0
 		currentPage = page
@@ -259,7 +259,7 @@ open class MenuView: UIScrollView {
 		return false
 	}
 
-	private func adjustmentContentInsetIfNeeded() {
+	private func adjustContentInsetIfNeeded() {
 		switch options.menuDisplayMode {
 		case .standard(_, let centerItem, _) where centerItem: break
 		default: return

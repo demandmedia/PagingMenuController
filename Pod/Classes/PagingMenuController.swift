@@ -11,9 +11,9 @@ import UIKit
 @objc public protocol PagingMenuControllerDelegate: class {
 	@objc optional func didBeginScrollingHorizontally()
 	@objc optional func didEndScrollingHorizontally()
-	@objc optional func didLoadPageController(_ viewController:UIViewController)
-	@objc optional func willMoveToMenuPage(_ viewController:UIViewController, page: Int)
-	@objc optional func didMoveToMenuPage(_ viewController:UIViewController, page: Int)
+	@objc optional func didLoadPageController(_ viewController: UIViewController)
+	@objc optional func willMove(toPageController viewController: UIViewController, at index: Int)
+	@objc optional func didMove(toPageController viewController: UIViewController, at index: Int)
 }
 
 open class PagingMenuController: UIViewController, UIScrollViewDelegate {
@@ -135,7 +135,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			// reset selected menu item view position
 			switch self.options.menuDisplayMode {
 			case .standard(_, _, _), .infinite(_):
-				self.menuView.moveToMenu(page: self.currentPage, animated: true)
+				self.menuView.move(toPage: self.currentPage, animated: true)
 			default: break
 			}
 			}, completion: nil)
@@ -201,7 +201,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			}
 
 			if let menuView = menuView {
-				menuView.moveToMenu(page: newPage, animated: true)
+				menuView.move(toPage: newPage, animated: true)
 			}
 		}
 	}
@@ -215,7 +215,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 		// go back to starting position if it's same page after all
 		if let menuView = menuView , currentPosition == position {
-			menuView.moveToMenu(page: currentPage, animated: true)
+			menuView.move(toPage: currentPage, animated: true)
 			return
 		}
 
@@ -231,7 +231,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		}
 
 		currentViewController = pagingViewControllers[currentPage]
-		delegate?.willMoveToMenuPage?(currentViewController, page: currentPage)
+		delegate?.willMove?(toPageController: currentViewController, at: currentPage)
 		contentScrollView.contentOffset.x = currentViewController.view!.frame.minX
 
 		constructPagingViewControllers()
@@ -240,7 +240,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		view.layoutIfNeeded()
 
 		currentPosition = currentPagingViewPosition()
-		delegate?.didMoveToMenuPage?(currentViewController, page: currentPage)
+		delegate?.didMove?(toPageController: currentViewController, at: currentPage)
 	}
 
 	// MARK: - UIGestureRecognizer
@@ -305,7 +305,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		contentScrollView.showsVerticalScrollIndicator = false
 		contentScrollView.scrollsToTop = false
 		contentScrollView.bounces = false
-		contentScrollView.isScrollEnabled = options.scrollEnabled
+		contentScrollView.isScrollEnabled = options.isScrollEnabled
 		contentScrollView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(contentScrollView)
 	}
@@ -480,9 +480,9 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		let _ = currentViewController.view
 
 		if let menuView = menuView {
-			menuView.moveToMenu(page: currentPage, animated: animated)
+			menuView.move(toPage: currentPage, animated: animated)
 		}
-		delegate?.willMoveToMenuPage?(currentViewController, page: currentPage)
+		delegate?.willMove?(toPageController: currentViewController, at: currentPage)
 
 		// hide paging views if it's moving to far away
 		hidePagingViewsIfNeeded(lastPage)
@@ -501,7 +501,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 				self.view.layoutIfNeeded()
 
 				self.currentPosition = self.currentPagingViewPosition()
-				self.delegate?.didMoveToMenuPage?(self.currentViewController, page: self.currentPage)
+				self.delegate?.didMove?(toPageController: self.currentViewController, at: self.currentPage)
 
 				completion?()
 			})
