@@ -19,7 +19,7 @@ import UIKit
 open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	open weak var delegate: PagingMenuControllerDelegate?
-	fileprivate var options: PagingMenuOptions!
+	private var options: PagingMenuOptions!
 	open var menuView: MenuView! {
 		didSet {
 			addTapGestureHandlers()
@@ -36,14 +36,13 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 	open var visiblePagingViewControllers = [UIViewController]()
 	open var currentPage: Int = 0
 	open var currentViewController: UIViewController!
-	fileprivate var menuItemTitles: [String] {
-		get {
-			return pagingViewControllers.map {
-				return $0.title ?? "Menu"
-			}
+	open var menuItemTitles: [String] {
+		return pagingViewControllers.map {
+			return $0.title ?? "Menu"
 		}
 	}
-	fileprivate enum PagingViewPosition {
+
+	private enum PagingViewPosition {
 		case left
 		case center
 		case right
@@ -58,7 +57,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			}
 		}
 	}
-	fileprivate var scrollBegan = false {
+	private var scrollBegan = false {
 		didSet {
 			if scrollBegan {
 				self.delegate?.didBeginScrollingHorizontally?()
@@ -67,22 +66,22 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			}
 		}
 	}
-	fileprivate var currentPosition: PagingViewPosition = .left
-	fileprivate let visiblePagingViewNumber: Int = 3
-	fileprivate var previousIndex: Int {
+	private var currentPosition: PagingViewPosition = .left
+	private let visiblePagingViewNumber: Int = 3
+	private var previousIndex: Int {
 		if case .infinite(_) = options.menuDisplayMode {
 			return currentPage - 1 < 0 ? options.menuItemCount - 1 : currentPage - 1
 		}
 		return currentPage - 1
 	}
-	fileprivate var nextIndex: Int {
+	private var nextIndex: Int {
 		if case .infinite(_) = options.menuDisplayMode {
 			return currentPage + 1 > options.menuItemCount - 1 ? 0 : currentPage + 1
 		}
 		return currentPage + 1
 	}
 
-	fileprivate let ExceptionName = "PMCException"
+	private let ExceptionName = "PMCException"
 
 	// MARK: - Lifecycle
 
@@ -106,9 +105,6 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	open override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-
-
-		//		moveToMenuPage(currentPage, animated: false)
 	}
 
 	override open func viewDidLayoutSubviews() {
@@ -274,13 +270,13 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	// MARK: - Constructor
 
-	fileprivate func constructMenuView() {
+	private func constructMenuView() {
 		menuView = MenuView(menuItemTitles: menuItemTitles, options: options)
 		menuView.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(menuView)
 	}
 
-	fileprivate func layoutMenuView() {
+	private func layoutMenuView() {
 
 		let viewsDictionary = ["menuView": menuView]
 		let metrics = ["height": options.menuHeight]
@@ -301,7 +297,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		menuView.layoutIfNeeded()
 	}
 
-	fileprivate func constructContentScrollView() {
+	private func constructContentScrollView() {
 		contentScrollView = UIScrollView(frame: CGRect.zero)
 		contentScrollView.delegate = self
 		contentScrollView.isPagingEnabled = true
@@ -314,9 +310,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		view.addSubview(contentScrollView)
 	}
 
-	fileprivate func layoutContentScrollView() {
-
-
+	private func layoutContentScrollView() {
 		var viewsDictionary:[String:AnyObject]
 		if options.menuPosition != .standalone {
 			viewsDictionary = ["contentScrollView": contentScrollView, "menuView": menuView]
@@ -339,7 +333,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
 	}
 
-	fileprivate func constructContentView() {
+	private func constructContentView() {
 		contentView = UIView(frame: CGRect.zero)
 		contentView.translatesAutoresizingMaskIntoConstraints = false
 		contentScrollView.addSubview(contentView)
@@ -353,7 +347,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
 	}
 
-	fileprivate func constructPagingViewControllers() {
+	private func constructPagingViewControllers() {
 		for (index, pagingViewController) in pagingViewControllers.enumerated() {
 			// construct three child view controllers at a maximum, previous(optional), current and next(optional)
 			if !shouldLoadPage(index) {
@@ -389,7 +383,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		}
 	}
 
-	fileprivate func layoutPagingViewControllers() {
+	private func layoutPagingViewControllers() {
 		// cleanup
 		NSLayoutConstraint.deactivate(contentView.constraints)
 
@@ -442,7 +436,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	// MARK: - Cleanup
 
-	fileprivate func cleanup() {
+	private func cleanup() {
 		if let menuView = self.menuView, let contentScrollView = self.contentScrollView {
 			menuView.removeFromSuperview()
 			contentScrollView.removeFromSuperview()
@@ -452,11 +446,11 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	// MARK: - Gesture handler
 
-	fileprivate func addTapGestureHandlers() {
+	private func addTapGestureHandlers() {
 		menuView.menuItemViews.forEach { $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(PagingMenuController.handleTapGesture(_:)))) }
 	}
 
-	fileprivate func addSwipeGestureHandlersIfNeeded() {
+	private func addSwipeGestureHandlersIfNeeded() {
 		switch options.menuDisplayMode {
 		case .standard(_, _, let scrollingMode):
 			switch scrollingMode {
@@ -480,7 +474,6 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 	// MARK: - Page controller
 
 	open func moveToMenuPage(_ page: Int, animated: Bool, completion: (()->Void)?  = nil) {
-
 		let lastPage = currentPage
 		currentPage = page
 		currentViewController = pagingViewControllers[page]
@@ -514,14 +507,14 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			})
 	}
 
-	fileprivate func hidePagingViewsIfNeeded(_ lastPage: Int) {
+	private func hidePagingViewsIfNeeded(_ lastPage: Int) {
 		if lastPage == previousIndex || lastPage == nextIndex {
 			return
 		}
 		visiblePagingViewControllers.forEach { $0.view.alpha = 0 }
 	}
 
-	fileprivate func shouldLoadPage(_ index: Int) -> Bool {
+	private func shouldLoadPage(_ index: Int) -> Bool {
 		if case .infinite(_) = options.menuDisplayMode {
 			if index != currentPage && index != previousIndex && index != nextIndex {
 				return false
@@ -534,13 +527,13 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		return true
 	}
 
-	fileprivate func isVisiblePagingViewController(_ pagingViewController: UIViewController) -> Bool {
+	private func isVisiblePagingViewController(_ pagingViewController: UIViewController) -> Bool {
 		return childViewControllers.contains(pagingViewController)
 	}
 
 	// MARK: - Page calculator
 
-	fileprivate func currentPagingViewPosition() -> PagingViewPosition {
+	private func currentPagingViewPosition() -> PagingViewPosition {
 		let pageWidth = contentScrollView.frame.width
 		let order = Int(ceil((contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth))
 
@@ -556,7 +549,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		return PagingViewPosition(order: order)
 	}
 
-	fileprivate func targetPage(tappedPage: Int) -> Int {
+	private func targetPage(tappedPage: Int) -> Int {
 		switch options.menuDisplayMode {
 		case .standard(_, _, let scrollingMode):
 			if case .pagingEnabled = scrollingMode {
@@ -570,13 +563,13 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	// MARK: - Validator
 
-	fileprivate func validateDefaultPage() {
+	private func validateDefaultPage() {
 		if options.defaultPage >= options.menuItemCount || options.defaultPage < 0 {
 			NSException(name: NSExceptionName(rawValue: ExceptionName), reason: "default page is invalid", userInfo: nil).raise()
 		}
 	}
 
-	fileprivate func validatePageNumbers() {
+	private func validatePageNumbers() {
 		if case .infinite(_) = options.menuDisplayMode {
 			if options.menuItemCount < visiblePagingViewNumber {
 				NSException(name: NSExceptionName(rawValue: ExceptionName), reason: "the number of view controllers should be more than three with Infinite display mode", userInfo: nil).raise()

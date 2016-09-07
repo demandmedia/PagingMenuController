@@ -10,7 +10,7 @@ import UIKit
 
 open class MenuItemView: UIView {
 
-	fileprivate var options: PagingMenuOptions!
+	private var options: PagingMenuOptions!
 
 	open var titleAttributed: NSAttributedString! {
 		didSet {
@@ -31,11 +31,11 @@ open class MenuItemView: UIView {
 
 	open var index:Int = 0
 
-	fileprivate var title:String!
-	fileprivate var titleLabel: UILabel!
-	fileprivate var titleLabelFont: UIFont!
-	fileprivate var widthLabelConstraint: NSLayoutConstraint!
-	fileprivate var selected:Bool = false
+	private var title:String!
+	private var titleLabel: UILabel!
+	private var titleLabelFont: UIFont!
+	private var widthLabelConstraint: NSLayoutConstraint!
+	private var selected:Bool = false
 
 	// MARK: - Lifecycle
 
@@ -106,7 +106,7 @@ open class MenuItemView: UIView {
 
 	// MARK: - Constructor
 
-	fileprivate func setupView() {
+	private func setupView() {
 		if case .roundRect(_, _, _, _) = options.menuItemMode {
 			backgroundColor = UIColor.clear
 		} else {
@@ -115,7 +115,7 @@ open class MenuItemView: UIView {
 		translatesAutoresizingMaskIntoConstraints = false
 	}
 
-	fileprivate func constructLabel() {
+	private func constructLabel() {
 		titleLabel = UILabel()
 		if titleAttributed != nil {
 			titleLabel.attributedText = titleAttributed
@@ -134,7 +134,7 @@ open class MenuItemView: UIView {
 		addSubview(titleLabel)
 	}
 
-	fileprivate func layoutLabel() {
+	private func layoutLabel() {
 		let viewsDictionary = ["label": titleLabel]
 
 		let labelSize = calculateLableSize()
@@ -150,7 +150,7 @@ open class MenuItemView: UIView {
 
 	// MARK: - Size calculator
 
-	fileprivate func calculateLableSize(_ size: CGSize = UIScreen.main.bounds.size) -> CGSize {
+	private func calculateLableSize(_ size: CGSize = UIScreen.main.bounds.size) -> CGSize {
 		var labelSize:CGSize!
 		if titleAttributed != nil {
 			labelSize = titleAttributed.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil).size
@@ -171,14 +171,14 @@ open class MenuItemView: UIView {
 		return CGSize(width: itemWidth + calculateHorizontalMargin() * 2, height: itemHeight)
 	}
 
-	fileprivate func labelWidth(_ labelSize: CGSize, widthMode: PagingMenuOptions.MenuItemWidthMode) -> CGFloat {
+	private func labelWidth(_ labelSize: CGSize, widthMode: PagingMenuOptions.MenuItemWidthMode) -> CGFloat {
 		switch widthMode {
 		case .flexible: return ceil(labelSize.width)
 		case .fixed(let width): return width
 		}
 	}
 
-	fileprivate func calculateHorizontalMargin() -> CGFloat {
+	private func calculateHorizontalMargin() -> CGFloat {
 		if case .segmentedControl = options.menuDisplayMode {
 			return 0.0
 		}
