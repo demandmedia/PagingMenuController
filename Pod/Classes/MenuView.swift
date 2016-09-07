@@ -68,10 +68,10 @@ open class MenuView: UIScrollView {
 		let duration = animated ? options.animationDuration : 0
 		currentPage = page
 
-		UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: options.springWithDamping, initialSpringVelocity: options.initialSpringVelocity , options: UIViewAnimationOptions.curveEaseOut,  animations: { [unowned self] () -> Void in
+		UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: options.springWithDamping, initialSpringVelocity: options.initialSpringVelocity , options: UIViewAnimationOptions.curveEaseOut,  animations: {
 			self.focusMenuItem()
 			self.positionMenuItemViews()
-		}) { [unowned self] (_) in
+		}) { (_) in
 			// relayout menu item views dynamically
 			if case .infinite(_) = self.options.menuDisplayMode {
 				self.relayoutMenuItemViews()

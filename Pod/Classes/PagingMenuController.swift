@@ -132,7 +132,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 			menuView.updateMenuViewConstraints(size: size)
 		}
 
-		coordinator.animate(alongsideTransition: { [unowned self] (_) -> Void in
+		coordinator.animate(alongsideTransition: { (_) in
 			self.view.setNeedsLayout()
 			self.view.layoutIfNeeded()
 
@@ -496,9 +496,8 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 		let duration = animated ? options.animationDuration : 0
 		UIView.animate(withDuration: duration, animations: {
-			[unowned self] () -> Void in
 			self.contentScrollView.contentOffset.x = self.currentViewController.view!.frame.minX
-			}, completion: { [unowned self] (_) -> Void in
+			}, completion: { (_) -> Void in
 				// show paging views
 				self.visiblePagingViewControllers.forEach { $0.view.alpha = 1 }
 
