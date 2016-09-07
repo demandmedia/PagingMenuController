@@ -8,11 +8,11 @@
 
 import UIKit
 
-public class MenuItemView: UIView {
+open class MenuItemView: UIView {
     
-    private var options: PagingMenuOptions!
+    fileprivate var options: PagingMenuOptions!
 	
-	public var titleAttributed: NSAttributedString! {
+	open var titleAttributed: NSAttributedString! {
 		didSet {
 			if titleLabel != nil {
 				titleLabel.attributedText = titleAttributed
@@ -20,7 +20,7 @@ public class MenuItemView: UIView {
 			}
 		}
 	}
-	public var titleSelectedAttributed: NSAttributedString! {
+	open var titleSelectedAttributed: NSAttributedString! {
 		didSet {
 			if titleLabel != nil && selected {
 				titleLabel.attributedText = titleSelectedAttributed
@@ -29,18 +29,18 @@ public class MenuItemView: UIView {
 		}
 	}
 	
-	public var index:Int = 0
+	open var index:Int = 0
 	
-	private var title:String!
-    private var titleLabel: UILabel!
-    private var titleLabelFont: UIFont!
-    private var widthLabelConstraint: NSLayoutConstraint!
-	private var selected:Bool = false
+	fileprivate var title:String!
+    fileprivate var titleLabel: UILabel!
+    fileprivate var titleLabelFont: UIFont!
+    fileprivate var widthLabelConstraint: NSLayoutConstraint!
+	fileprivate var selected:Bool = false
 	
     // MARK: - Lifecycle
 	
 	internal init(title: String, options: PagingMenuOptions) {
-		super.init(frame: CGRectZero)
+		super.init(frame: CGRect.zero)
 		
 		self.options = options
 		self.title = title
@@ -51,7 +51,7 @@ public class MenuItemView: UIView {
 	}
 
 	internal init(title: NSAttributedString, selectedTitle: NSAttributedString, options: PagingMenuOptions) {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         
         self.options = options
         self.titleAttributed = title
@@ -72,9 +72,9 @@ public class MenuItemView: UIView {
     
     // MARK: - Constraints manager
     
-    internal func updateLabelConstraints(size size: CGSize) {
+    internal func updateLabelConstraints(size: CGSize) {
         // set width manually to support ratotaion
-        if case .SegmentedControl = options.menuDisplayMode {
+        if case .segmentedControl = options.menuDisplayMode {
             let labelSize = calculateLableSize(size)
             widthLabelConstraint.constant = labelSize.width
         }
@@ -82,12 +82,12 @@ public class MenuItemView: UIView {
     
     // MARK: - Label changer
     
-    internal func focusLabel(selected: Bool) {
+    internal func focusLabel(_ selected: Bool) {
 		
 		self.selected = selected
 		
-        if case .RoundRect(_, _, _, _) = options.menuItemMode {
-            backgroundColor = UIColor.clearColor()
+        if case .roundRect(_, _, _, _) = options.menuItemMode {
+            backgroundColor = UIColor.clear
         } else {
             backgroundColor = selected ? options.selectedBackgroundColor : options.backgroundColor
         }
@@ -106,16 +106,16 @@ public class MenuItemView: UIView {
     
     // MARK: - Constructor
     
-    private func setupView() {
-        if case .RoundRect(_, _, _, _) = options.menuItemMode {
-            backgroundColor = UIColor.clearColor()
+    fileprivate func setupView() {
+        if case .roundRect(_, _, _, _) = options.menuItemMode {
+            backgroundColor = UIColor.clear
         } else {
             backgroundColor = options.backgroundColor
         }
         translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func constructLabel() {
+    fileprivate func constructLabel() {
         titleLabel = UILabel()
 		if titleAttributed != nil {
 			titleLabel.attributedText = titleAttributed
@@ -128,58 +128,58 @@ public class MenuItemView: UIView {
 			titleLabel.numberOfLines = 1
 		}
 		
-        titleLabel.textAlignment = NSTextAlignment.Center
-        titleLabel.userInteractionEnabled = true
+        titleLabel.textAlignment = NSTextAlignment.center
+        titleLabel.isUserInteractionEnabled = true
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
     }
     
-    private func layoutLabel() {
+    fileprivate func layoutLabel() {
         let viewsDictionary = ["label": titleLabel]
         
         let labelSize = calculateLableSize()
 
-        let horizontalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
-        let verticalConstraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+        let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
         
-        NSLayoutConstraint.activateConstraints(horizontalConstraints + verticalConstraints)
+        NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
         
-        widthLabelConstraint = NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.Width, multiplier: 1.0, constant: labelSize.width)
-        widthLabelConstraint.active = true
+        widthLabelConstraint = NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.width, multiplier: 1.0, constant: labelSize.width)
+        widthLabelConstraint.isActive = true
     }
     
     // MARK: - Size calculator
     
-    private func calculateLableSize(size: CGSize = UIScreen.mainScreen().bounds.size) -> CGSize {
+    fileprivate func calculateLableSize(_ size: CGSize = UIScreen.main.bounds.size) -> CGSize {
 		var labelSize:CGSize!
 		if titleAttributed != nil {
-			labelSize = titleAttributed.boundingRectWithSize(CGSizeMake(CGFloat.max, CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil).size
+			labelSize = titleAttributed.boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, context: nil).size
 		} else {
-			labelSize = NSString(string: title).boundingRectWithSize(CGSizeMake(CGFloat.max, CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: titleLabelFont], context: nil).size
+			labelSize = NSString(string: title).boundingRect(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName: titleLabelFont], context: nil).size
 		}
         let itemWidth: CGFloat
         switch options.menuDisplayMode {
-        case .Standard(let widthMode, _, _):
+        case .standard(let widthMode, _, _):
             itemWidth = labelWidth(labelSize, widthMode: widthMode)
-        case .SegmentedControl:
+        case .segmentedControl:
             itemWidth = size.width / CGFloat(options.menuItemCount)
-        case .Infinite(let widthMode):
+        case .infinite(let widthMode):
             itemWidth = labelWidth(labelSize, widthMode: widthMode)
         }
         
         let itemHeight = floor(labelSize.height)
-        return CGSizeMake(itemWidth + calculateHorizontalMargin() * 2, itemHeight)
+        return CGSize(width: itemWidth + calculateHorizontalMargin() * 2, height: itemHeight)
     }
     
-    private func labelWidth(labelSize: CGSize, widthMode: PagingMenuOptions.MenuItemWidthMode) -> CGFloat {
+    fileprivate func labelWidth(_ labelSize: CGSize, widthMode: PagingMenuOptions.MenuItemWidthMode) -> CGFloat {
         switch widthMode {
-        case .Flexible: return ceil(labelSize.width)
-        case .Fixed(let width): return width
+        case .flexible: return ceil(labelSize.width)
+        case .fixed(let width): return width
         }
     }
     
-    private func calculateHorizontalMargin() -> CGFloat {
-        if case .SegmentedControl = options.menuDisplayMode {
+    fileprivate func calculateHorizontalMargin() -> CGFloat {
+        if case .segmentedControl = options.menuDisplayMode {
             return 0.0
         }
         return options.menuItemMargin
