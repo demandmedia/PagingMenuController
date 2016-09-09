@@ -114,9 +114,9 @@ open class MenuView: UIScrollView {
 	}
 
 	private func layoutContentView() {
-		let viewsDictionary = ["contentView": contentView, "scrollView": self]
-		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[contentView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
-		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[contentView(==scrollView)]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+		let viewsDictionary: [String: Any] = ["contentView": contentView, "scrollView": self]
+		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[contentView]|", metrics: nil, views: viewsDictionary)
+		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[contentView(==scrollView)]|", metrics: nil, views: viewsDictionary)
 
 		NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
 	}
@@ -167,7 +167,7 @@ open class MenuView: UIScrollView {
 
 		for (index, menuItemView) in sortedMenuItemViews.enumerated() {
 			let visualFormat: String;
-			var viewsDicrionary = ["menuItemView": menuItemView]
+			var viewsDicrionary: [String: Any] = ["menuItemView": menuItemView]
 			if index == 0 {
 				visualFormat = "H:|[menuItemView]"
 			} else  {
@@ -178,8 +178,8 @@ open class MenuView: UIScrollView {
 					visualFormat = "H:[previousMenuItemView][menuItemView]"
 				}
 			}
-			let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDicrionary)
-			let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[menuItemView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDicrionary)
+			let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: visualFormat, metrics: nil, views: viewsDicrionary)
+			let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[menuItemView]|", metrics: nil, views: viewsDicrionary)
 
 			NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
 		}

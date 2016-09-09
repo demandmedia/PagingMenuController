@@ -135,12 +135,12 @@ open class MenuItemView: UIView {
 	}
 
 	private func layoutLabel() {
-		let viewsDictionary = ["label": titleLabel]
+		let viewsDictionary: [String: Any] = ["label": titleLabel]
 
 		let labelSize = calculateLabelSize()
 
-		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
-		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: viewsDictionary)
+		let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|[label]|", metrics: nil, views: viewsDictionary)
+		let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[label]|", metrics: nil, views: viewsDictionary)
 
 		NSLayoutConstraint.activate(horizontalConstraints + verticalConstraints)
 

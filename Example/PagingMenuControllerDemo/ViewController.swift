@@ -15,10 +15,10 @@ class ViewController: UIViewController, PagingMenuControllerDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let usersViewController = self.storyboard?.instantiateViewControllerWithIdentifier("UsersViewController") as! UsersViewController
-        let repositoriesViewController = self.storyboard?.instantiateViewControllerWithIdentifier("RepositoriesViewController") as! RepositoriesViewController
-        let gistsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("GistsViewController") as! GistsViewController
-        let organizationsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("OrganizationsViewController") as! OrganizationsViewController
+        let usersViewController = self.storyboard?.instantiateViewController(withIdentifier: "UsersViewController") as! UsersViewController
+        let repositoriesViewController = self.storyboard?.instantiateViewController(withIdentifier: "RepositoriesViewController") as! RepositoriesViewController
+        let gistsViewController = self.storyboard?.instantiateViewController(withIdentifier: "GistsViewController") as! GistsViewController
+        let organizationsViewController = self.storyboard?.instantiateViewController(withIdentifier: "OrganizationsViewController") as! OrganizationsViewController
         
         let viewControllers = [usersViewController, repositoriesViewController, gistsViewController, organizationsViewController]
         
@@ -37,10 +37,10 @@ class ViewController: UIViewController, PagingMenuControllerDelegate {
 
     // MARK: - PagingMenuControllerDelegate
     
-    func willMoveToMenuPage(page: Int) {
+    func willMoveToMenuPage(_ page: Int) {
     }
     
-    func didMoveToMenuPage(page: Int) {
+    func didMoveToMenuPage(_ page: Int) {
     }
 }
 
