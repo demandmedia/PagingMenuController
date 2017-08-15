@@ -307,6 +307,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 		contentScrollView.bounces = false
 		contentScrollView.isScrollEnabled = options.isScrollEnabled
 		contentScrollView.translatesAutoresizingMaskIntoConstraints = false
+		contentScrollView.isDirectionalLockEnabled = true
 		view.addSubview(contentScrollView)
 	}
 
