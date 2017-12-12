@@ -537,7 +537,7 @@ open class PagingMenuController: UIViewController, UIScrollViewDelegate {
 
 	private func currentPagingViewPosition() -> PagingViewPosition {
 		let pageWidth = contentScrollView.frame.width
-		let order = Int(ceil((contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth))
+		let order = pageWidth > 0 ? Int(ceil((contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth)) : 0
 
 		if case .infinite(_) = options.menuDisplayMode {
 			return PagingViewPosition(order: order)
